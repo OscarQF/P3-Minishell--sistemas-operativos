@@ -14,14 +14,22 @@
 #include "orden.h"
 #include "procesos.h"
 
+#define NUM_ORDENES_INTERNAS 3
+
 static void ejecutar_pwd(const struct orden* orden);
 static void ejecutar_cd(const struct orden* orden);
 static void ejecutar_jobs(const struct orden* orden);
 static void ejecutar_orden_externa(const struct orden* orden);
 
-static const int num_ordenes_internas = 3;
-static const char* ordenes[] = {"pwd", "cd", "jobs", "externa"};
-static void (*ejecutar[])(const struct orden* orden) =
+static const char* ordenes[NUM_ORDENES_INTERNAS+1] =
+{
+	"pwd",
+	"cd",
+	"jobs",
+	"externa"
+};
+
+static void (*ejecutar[NUM_ORDENES_INTERNAS+1])(const struct orden* orden) =
 {
 	ejecutar_pwd,
 	ejecutar_cd,
@@ -50,7 +58,7 @@ static void ejecutar_orden(const struct orden* orden)
 	int i;
 
 	i = 0;
-	while (i < num_ordenes_internas && strcmp(ordenes[i], orden->args[0]))
+	while (i < NUM_ORDENES_INTERNAS && strcmp(ordenes[i], orden->args[0]))
 	{
 		i++;
 	}
