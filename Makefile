@@ -1,7 +1,7 @@
 # Makefile clásico para el proyecto "mish"
 
-CC = gcc
-CFLAGS = -Wall -Wextra -O2 -Wuninitialized
+CC = cc
+CFLAGS = -O1
 
 OBJS = minishell.o orden.o procesos.o
 
