@@ -33,7 +33,7 @@ static void saltar_blancos(void)
 	}
 }
 
-static void final_palabra(void)
+static void ir_fin_palabra(void)
 {
 	while
 	(	lin[pos_actual] != ' ' &&
@@ -51,7 +51,7 @@ static void final_palabra(void)
 static char* obtener_cadena(void)
 {
 	char* pal = &orden[pos_actual];
-	final_palabra();
+	ir_fin_palabra();
 	orden[pos_actual] = '\0';
 	return pal;
 }

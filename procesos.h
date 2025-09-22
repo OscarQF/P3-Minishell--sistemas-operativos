@@ -37,7 +37,7 @@ extern void mostrar_procesos_y_eliminar_terminados(void);
 
 /**
  * Muestra todos los procesos que están terminados y los elimina de la
- * lista de procesos activos. No prcesa los que aún no han terminado.
+ * lista de procesos activos. No procesa los que aún no han terminado.
  */
 extern void mostrar_y_eliminar_procesos_terminados(void);
 
