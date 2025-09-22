@@ -9,13 +9,13 @@ const struct orden salir = {{"exit", NULL}, NULL, NULL, PRIMERO, NULL};
 static struct orden actual;
 static char lin[MAX_LIN]; /* la línea leída */
 static char orden[MAX_LIN]; /* args apuntará aquí */
-static int i; /* recorre la orden */
+static int pos_actual; /* recorre la orden */
 static int num_param; /* número de parámetros de la orden */
 static int longitud; /* longitud de la línea leída */
 
 static void borrar_orden_actual(void)
 {
-	i = 0;
+	pos_actual = 0;
 	num_param=0;
 	longitud = strlen(lin) - 1;
 	lin[longitud]='\0';
@@ -27,32 +27,32 @@ static void borrar_orden_actual(void)
 
 static void saltar_blancos(void)
 {
-	while (lin[i] == ' ' || lin[i] == '\t')
+	while (lin[pos_actual] == ' ' || lin[pos_actual] == '\t')
 	{
-		i++;
+		pos_actual++;
 	}
 }
 
 static void final_palabra(void)
 {
 	while
-	(	lin[i] != ' ' &&
-		lin[i] != '\t' &&
-		lin[i] != '&' &&
-		lin[i] != '>' &&
-		lin[i] != '<' &&
-		lin[i] != '\0'
+	(	lin[pos_actual] != ' ' &&
+		lin[pos_actual] != '\t' &&
+		lin[pos_actual] != '&' &&
+		lin[pos_actual] != '>' &&
+		lin[pos_actual] != '<' &&
+		lin[pos_actual] != '\0'
 	)
 	{
-		i++;
+		pos_actual++;
 	}
 }
 
 static char* obtener_cadena(void)
 {
-	char* pal = &orden[i];
+	char* pal = &orden[pos_actual];
 	final_palabra();
-	orden[i] = '\0';
+	orden[pos_actual] = '\0';
 	return pal;
 }
 
@@ -77,7 +77,7 @@ static void extraer_param(void)
 
 static void redirigir_entrada(void)
 {
-	i++;
+	pos_actual++;
 	if (actual.entrada != NULL)
 	{
 		fprintf(stderr, "Más de una redirección de la entrada\n");
@@ -95,7 +95,7 @@ static void redirigir_entrada(void)
 
 static void redirigir_salida(void)
 {
-	i++;
+	pos_actual++;
 	if (actual.salida != NULL)
 	{
 		fprintf(stderr, "Más de una redirección de la salida\n");
@@ -120,13 +120,13 @@ static void anotar_segundo_plano(void)
 		return;
 	}
 	actual.plano = SEGUNDO;
-	i++;
+	pos_actual++;
 }
 
 static void extraer_palabra(void)
 {
 	saltar_blancos();
-	switch (lin[i])
+	switch (lin[pos_actual])
 	{
 		case '<':
 			redirigir_entrada(); break;
@@ -144,7 +144,7 @@ static void extraer_palabra(void)
 static int seguir_analizando(void)
 {
 	return
-		i < longitud &&
+		pos_actual < longitud &&
 		actual.args[0] != NULL &&
 		num_param < MAX_ARGS-2;
 }
