@@ -16,7 +16,7 @@ fi
 
 if [ ! -f "$BACKUP_FILE" ]; then
     echo "✘ No se encontró ninguna copia de seguridad en $BACKUP_FILE"
-    exit 1
+    exit 2
 fi
 
 echo "⚠ Vas a restaurar la imagen de Minix."
@@ -26,7 +26,7 @@ echo
 read -p "¿Quieres continuar con la restauración? (s/n): " RESP
 if [ "$RESP" != "s" ]; then
     echo "Operación cancelada."
-    exit 0
+    exit 3
 fi
 
 # --- Obtener el ID del alumno ---
@@ -50,7 +50,7 @@ if [ -z "$ID_ALUMNO" ]; then
     read -p "Introduce tu número de matrícula (el mismo que metiste en la práctica 1): " ID_ALUMNO
     if [ -z "$ID_ALUMNO" ]; then
         echo "✘ No se introdujo ningún identificador. Cancelando."
-        exit 1
+        exit 4
     fi
 fi
 
@@ -66,3 +66,5 @@ echo "→ Restaurando copia en $IMG_FILE..."
 gunzip -c "$BACKUP_FILE" > "$IMG_FILE"
 
 echo "✔ Restauración completada."
+
+exit 0

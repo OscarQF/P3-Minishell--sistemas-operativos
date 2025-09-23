@@ -17,7 +17,7 @@ fi
 
 if [ ! -f "$IMG_FILE" ]; then
     echo "✘ No se encontró la imagen de Minix en $IMG_DIR"
-    exit 1
+    exit 2
 fi
 
 echo "⚠ Vas a crear una copia de seguridad de tu imagen de Minix."
@@ -27,10 +27,12 @@ echo
 read -p "¿Quieres continuar? (s/n): " RESP
 if [ "$RESP" != "s" ] ; then
     echo "Operación cancelada."
-    exit 0
+    exit 3
 fi
 
 echo "→ Creando copia comprimida en $BACKUP_FILE..."
 gzip -c "$IMG_FILE" > "$BACKUP_FILE"
 
 echo "✔ Copia de seguridad completada."
+
+exit 0
