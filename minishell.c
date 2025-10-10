@@ -42,11 +42,67 @@ static void (*ejecutar[NUM_ORDENES_TOTAL])(const struct orden* orden) =
 
 static void ejecutar_pwd(const struct orden* orden)
 {
+	{
+	char cwd[PATH_MAX];
+	if(orden->args[1] == NULL){
+		if(orden->entrada == NULL){
+			if(orden->salida == NULL){
+				if(orden->plano == PRIMERO){
+					if (getcwd(cwd, sizeof(cwd)) == NULL){
+        			perror("pwd");
+    				}else{
+    					printf("%s\n", cwd);
+						}
+
+					}else{perror("pwd");
+					  return;}
+			}else{perror("pwd");
+			  return;}
+
+		}else {perror("pwd");
+		 return;}
+	}else {perror("pwd");
+	       return;}
+
+}
 }
 
 static void ejecutar_cd(const struct orden* orden)
 {
+	const char* home;
+	if(orden->plano==SEGUNDO){
+		fprintf(stderr,"cd: no se puede ejecutar en segundo plano\n");
+		return;
+	}
+
+	if(orden ->args[1] !=NULL){
+		if(orden->args[2]!=NULL){
+			 fprintf(stderr, "cd: demasiados argumentos\n");
+			return;
+		}else{
+		
+			if(chdir(orden->args[1])!=0){
+				perror("cd");
+				return;
+			}
+		}
+		
+	    
+	
+	}else{
+	home=getenv("HOME");
+		if(home==NULL){
+			perror("cd");
+			return;
+		}else{
+			if(chdir(home)!=0){
+				perror("cd");
+				return;
+			}
+		}
+	}
 }
+
 
 static void ejecutar_orden_externa(const struct orden* orden)
 {
