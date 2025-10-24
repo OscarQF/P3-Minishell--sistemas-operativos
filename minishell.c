@@ -106,6 +106,66 @@ static void ejecutar_cd(const struct orden* orden)
 
 static void ejecutar_orden_externa(const struct orden* orden)
 {
+	pid_t pid = fork();
+
+	 if (!orden || !orden->args || !orden->args[0]) {
+        fprintf(stderr, "ejecutar_orden_externa: comando vacío\n");
+        return;
+    }
+
+    if (pid <0) {
+        perror("fork");
+        return;
+    }
+
+    if (pid == 0) {
+		int entrada;
+		int salida;
+		if(orden->entrada != NULL){
+			entrada= open(orden->entrada,O_RDONLY);
+			if(entrada < 0){
+				perror(orden->entrada);
+				exit(2);
+			}
+			if(dup2(entrada,STDIN_FILENO)< 0){
+				perror("dup2 orden->entrada");
+				close(entrada);
+				exit(2);
+			}
+			close(entrada);
+		}
+
+
+		if(orden->salida!= NULL){
+			salida= open(orden->salida,O_WRONLY | O_CREAT | O_TRUNC, 0666);
+			if(salida < 0){
+				perror(orden->salida);
+				exit(2);
+			}
+			if(dup2(salida,STDOUT_FILENO)< 0){
+				perror("dup2 orden->salida");
+				close(salida);
+				exit(2);
+			}
+			close(salida);
+		}
+
+		
+
+        execvp(orden->args[0],orden->args);
+        perror("execvp");
+		exit(3);
+
+
+		
+    }else{
+		int status;
+		pid_t padre;
+		while (waitpid(padre, &status, 0) == -1) { 
+    	perror("waitpid");
+		return;
+		}
+	}
 }
 
 static void ejecutar_jobs(const struct orden* orden)
