@@ -170,6 +170,27 @@ static void ejecutar_orden_externa(const struct orden* orden)
 
 static void ejecutar_jobs(const struct orden* orden)
 {
+
+	if (!orden) {
+        fprintf(stderr, "jobs: uso inválido\n");
+        return;
+    }
+   
+    if (orden->args && orden->args[1]) {
+        fprintf(stderr, "jobs: no acepta argumentos\n");
+        return;
+    }
+    if (orden->entrada || orden->salida) {
+        fprintf(stderr, "jobs: no permite redirecciones\n");
+        return;
+    }
+    if (orden->plano==SEGUNDO) {
+        fprintf(stderr, "jobs: debe ejecutarse en primer plano\n");
+        return;
+    }
+	
+    mostrar_y_eliminar_procesos_terminados();
+    
 }
 
 static void ejecutar_orden(const struct orden* orden)
